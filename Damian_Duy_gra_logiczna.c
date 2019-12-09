@@ -2,14 +2,15 @@
 
 void show_starting_menu();
 void show_continuing_menu();
-void show_map(int tab_map [][10], int tab_size);
+void show_map(int tab_size_horizontal, int tab_size_vertical, int tab_map [][tab_size_vertical]);
 void user_input();
-int stars_in_map_counter(int tab_map [][10], int tab_size);
+int stars_in_map_counter(int tab_size_horizontal, int tab_size_vertical, int tab_map [][tab_size_vertical]);
 
 
 int main()
 {
-    int tab_size = 10;
+    int tab_size_horizontal = 10;
+    int tab_size_vertical = 10;
     int tab_map[10][10] = {
         {1,1,1,1,1,1,1,1,1,1},
         {1,2,1,0,0,0,0,0,0,1},
@@ -22,8 +23,8 @@ int main()
         {1,0,3,0,0,0,0,0,0,1},
         {1,1,1,1,1,1,1,1,1,1} };
     show_starting_menu();
-    show_map(tab_map, tab_size);
-    printf("%d\n", stars_in_map_counter(tab_map, tab_size));
+    show_map(tab_size_horizontal,tab_size_vertical,tab_map);
+    printf("%d\n", stars_in_map_counter(tab_size_horizontal,tab_size_vertical,tab_map));
     return 0;
 }
 
@@ -41,11 +42,11 @@ void show_continuing_menu()
     printf("3. Exit\n");
 }
 
-void show_map(int tab_map [][10], int tab_size)
+void show_map(int tab_size_horizontal, int tab_size_vertical, int tab_map [][tab_size_vertical])
 {
-    for(int i = 0; i < tab_size; i++)
+    for(int i = 0; i < tab_size_horizontal; i++)
     {
-        for(int j = 0; j < 10; j++)
+        for(int j = 0; j < tab_size_vertical; j++)
         {
             switch (tab_map[i][j])
             {
@@ -70,11 +71,11 @@ void show_map(int tab_map [][10], int tab_size)
     }   
 }
 
-int stars_in_map_counter(int tab_map [][10], int tab_size)
+int stars_in_map_counter(int tab_size_horizontal, int tab_size_vertical, int tab_map [][tab_size_vertical])
 {
     int count_stars = 0;
-    for(int i = 0; i < tab_size; i++)
-        for(int j = 0; j < tab_size; j++)
+    for(int i = 0; i < tab_size_horizontal; i++)
+        for(int j = 0; j < tab_size_vertical; j++)
         {
             if(tab_map[i][j] == 3) count_stars++;
         }
