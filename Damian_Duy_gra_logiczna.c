@@ -5,22 +5,34 @@
 void show_starting_menu();
 void generate_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); 
 void show_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]);
-void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars);
+void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr);
 int stars_in_map_counter(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]);
 char getch();
 
 int main()
 {
+    clock_t begin_t, end_t, total_t;
     srand(time(NULL));
     int tab_size_vertical = 20;
     int tab_size_horizontal = 20;
     int map_size = tab_size_vertical*tab_size_horizontal;
     int tab_map[20][20];
+    int steps = 0;
+    int * ptr;
+    ptr = &steps;
     generate_map(tab_size_vertical, tab_size_horizontal, tab_map);
-    show_starting_menu();
     int num_of_stars = stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map);
-    user_input(tab_size_vertical, tab_size_horizontal, tab_map, num_of_stars);
-    printf("%d\n", stars_in_map_counter(tab_size_vertical, tab_size_horizontal,tab_map));
+    show_starting_menu();
+    printf("There are %d stars on the map\n", stars_in_map_counter(tab_size_vertical, tab_size_horizontal,tab_map));
+    begin_t = clock();
+    user_input(tab_size_vertical, tab_size_horizontal, tab_map, num_of_stars, ptr);
+    end_t = clock();
+    if(stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map) == 0)
+    {
+        printf("You got the stars in %d steps.\n", *ptr);
+        total_t = (float)(end_t - begin_t);
+        printf("With time %ld sec\n", total_t/10000);
+    }    
     return 0;
 }
 
@@ -58,6 +70,10 @@ void show_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [ta
                 case 4:
                 printf(" ");
                 break;
+
+                default: //Have to be set to proper generate stars randomly later
+                printf(" ");
+                break;
             }
        }
        printf ("\n");
@@ -75,7 +91,7 @@ int stars_in_map_counter(int tab_size_vertical, int tab_size_horizontal, int tab
     return count_stars;    
 }
 
-void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars)
+void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr)
 {
     int coor_x = 1;
     int coor_y = 1;
@@ -92,7 +108,7 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
         {
             case 'a':
             {
-                if(tab_map[coor_x][coor_y-1] == 4) coor_y--;
+                if(tab_map[coor_x][coor_y-1] != 1 && tab_map[coor_x][coor_y-1] != 2 && tab_map[coor_x][coor_y-1] != 3) coor_y--;
                 else if(tab_map[coor_x][coor_y-1] == 3)
                 {
                     stars_left--;
@@ -102,7 +118,7 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
             }
             case 'd':
             {
-                if(tab_map[coor_x][coor_y+1] == 4) coor_y++;
+                if(tab_map[coor_x][coor_y+1] != 1 && tab_map[coor_x][coor_y+1] != 2 && tab_map[coor_x][coor_y+1] != 3) coor_y++;
                 else if(tab_map[coor_x][coor_y+1] == 3)
                 {
                     stars_left--;
@@ -112,7 +128,7 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
             }
             case 'w':
             {
-                if(tab_map[coor_x-1][coor_y] == 4) coor_x--;
+                if(tab_map[coor_x-1][coor_y] != 1 && tab_map[coor_x-1][coor_y] != 2 && tab_map[coor_x-1][coor_y] != 3) coor_x--;
                 else if(tab_map[coor_x-1][coor_y] == 3)
                 {
                     stars_left--;
@@ -122,7 +138,7 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
             }
             case 's':
             {
-                if(tab_map[coor_x+1][coor_y] == 4) coor_x++;
+                if(tab_map[coor_x+1][coor_y] != 1 && tab_map[coor_x+1][coor_y] != 2 && tab_map[coor_x+1][coor_y] != 3) coor_x++;
                 else if(tab_map[coor_x+1][coor_y] == 3)
                 {
                     stars_left--;
@@ -132,6 +148,7 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
             }
         }
         tab_map[coor_x][coor_y] = 0;
+        (*ptr)++;
     }while(c != 'e' && stars_left > 0);
         system("clear");
         printf("Use w,s,a,d to move, e to exit.\n");
@@ -161,7 +178,10 @@ void generate_map(int tab_size_vertical, int tab_size_horizontal, int tab_map []
     for(int i = 1; i < tab_size_vertical; i++) tab_map[i][tab_size_horizontal - 1] = 1;
     for(int j = 0; j < tab_size_horizontal; j++)tab_map[tab_size_vertical - 1][j] = 2;
 
-    tab_map[13][14] = 3;
+    //Generating stars randomly
+    for(int i = 2; i < tab_size_vertical - 1; i++)
+        for(int j = 2; j < tab_size_horizontal - 1; j++)
+            tab_map[i][j] = rand() % 20 + 3;        
 
     
     /*tab_map[20][20] = {
