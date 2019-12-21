@@ -2,15 +2,19 @@
 #include <stdlib.h>
 #include <time.h>
 
-void show_starting_menu();
-void generate_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); 
-void show_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]);
-void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr);
-int stars_in_map_counter(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]);
-char getch();
+void logging_in();
+void write_time_to_file();
+void read_time_from_file();
+void show_menu_after_logging(int checker); //Function for showing menu
+void generate_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that generates map
+void show_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that prints map
+void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr); //Function for taking user input and moving the character
+int stars_in_map_counter(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that counts elements to pick on the map
+char getch(); //Function for taking input from keyboard without waiting for enter
 
 int main()
 {
+    //Declaration of variables
     clock_t begin_t, end_t, total_t;
     srand(time(NULL));
     int tab_size_vertical = 20;
@@ -20,27 +24,68 @@ int main()
     int steps = 0;
     int * ptr;
     ptr = &steps;
-    generate_map(tab_size_vertical, tab_size_horizontal, tab_map);
-    int num_of_stars = stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map);
-    show_starting_menu();
-    printf("There are %d stars on the map\n", stars_in_map_counter(tab_size_vertical, tab_size_horizontal,tab_map));
-    begin_t = clock();
-    user_input(tab_size_vertical, tab_size_horizontal, tab_map, num_of_stars, ptr);
-    end_t = clock();
-    if(stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map) == 0)
+    int choice = 0;
+    int checker = 0;
+    //End of the declaration of variables
+
+    //Logging in
+    //logging_in()
+
+    //Looped menu
+    do
     {
-        printf("You got the stars in %d steps.\n", *ptr);
-        total_t = (float)(end_t - begin_t);
-        printf("With time %ld sec\n", total_t/10000);
-    }    
+        show_menu_after_logging(checker);
+        scanf("%d",&choice);
+        switch(choice)
+        {
+            case 1:
+            {
+                generate_map(tab_size_vertical, tab_size_horizontal, tab_map);
+                int num_of_stars = stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map);
+                printf("There are %d stars on the map\n", stars_in_map_counter(tab_size_vertical, tab_size_horizontal,tab_map));
+                begin_t = clock();
+                user_input(tab_size_vertical, tab_size_horizontal, tab_map, num_of_stars, ptr);
+                end_t = clock();
+                if(stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map) == 0)
+                {
+                    printf("You got the stars in %d steps.\n", *ptr);
+                    total_t = (float)(end_t - begin_t);
+                    printf("With time %ld sec\n", total_t/10000);
+                }
+                break;   
+            }
+
+            case 2:
+            write_time_to_file();
+            break;
+
+            case 3:
+            printf("Thank you for playing!\n");
+            exit(0);
+        }
+        checker = 1;
+    }while(1);
+
     return 0;
 }
 
-void show_starting_menu()
+void show_menu_after_logging(int checker)
 {
-    printf("1. Play.\n");
-    printf("2. Show highscore.\n");
-    printf("3. Exit.\n");
+    if(checker == 0)
+    {
+        printf("Welcome login!\n");
+        printf("1. Play.\n");
+        printf("2. Show time played.\n");
+        printf("3. Exit.\n");
+    }
+
+    if(checker == 1)   
+    {   
+        printf("Welcome again login!\n");
+        printf("1. Play again.\n");
+        printf("2. Show time played.\n");
+        printf("3. Exit.\n");
+    } 
 }
 
 void show_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal])
@@ -69,6 +114,10 @@ void show_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [ta
 
                 case 4:
                 printf(" ");
+                break;
+
+                case 100:
+                printf("$");
                 break;
 
                 default: //Have to be set to proper generate stars randomly later
@@ -108,7 +157,7 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
         {
             case 'a':
             {
-                if(tab_map[coor_x][coor_y-1] != 1 && tab_map[coor_x][coor_y-1] != 2 && tab_map[coor_x][coor_y-1] != 3) coor_y--;
+                if(tab_map[coor_x][coor_y-1] != 1 && tab_map[coor_x][coor_y-1] != 2 && tab_map[coor_x][coor_y-1] != 3 && tab_map[coor_x][coor_y-1] != 100) coor_y--;
                 else if(tab_map[coor_x][coor_y-1] == 3)
                 {
                     stars_left--;
@@ -118,7 +167,7 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
             }
             case 'd':
             {
-                if(tab_map[coor_x][coor_y+1] != 1 && tab_map[coor_x][coor_y+1] != 2 && tab_map[coor_x][coor_y+1] != 3) coor_y++;
+                if(tab_map[coor_x][coor_y+1] != 1 && tab_map[coor_x][coor_y+1] != 2 && tab_map[coor_x][coor_y+1] != 3 && tab_map[coor_x][coor_y+1] != 100) coor_y++;
                 else if(tab_map[coor_x][coor_y+1] == 3)
                 {
                     stars_left--;
@@ -128,7 +177,7 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
             }
             case 'w':
             {
-                if(tab_map[coor_x-1][coor_y] != 1 && tab_map[coor_x-1][coor_y] != 2 && tab_map[coor_x-1][coor_y] != 3) coor_x--;
+                if(tab_map[coor_x-1][coor_y] != 1 && tab_map[coor_x-1][coor_y] != 2 && tab_map[coor_x-1][coor_y] != 3 && tab_map[coor_x-1][coor_y] != 100) coor_x--;
                 else if(tab_map[coor_x-1][coor_y] == 3)
                 {
                     stars_left--;
@@ -138,7 +187,7 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
             }
             case 's':
             {
-                if(tab_map[coor_x+1][coor_y] != 1 && tab_map[coor_x+1][coor_y] != 2 && tab_map[coor_x+1][coor_y] != 3) coor_x++;
+                if(tab_map[coor_x+1][coor_y] != 1 && tab_map[coor_x+1][coor_y] != 2 && tab_map[coor_x+1][coor_y] != 3 && tab_map[coor_x+1][coor_y] != 100) coor_x++;
                 else if(tab_map[coor_x+1][coor_y] == 3)
                 {
                     stars_left--;
@@ -203,6 +252,11 @@ void generate_map(int tab_size_vertical, int tab_size_horizontal, int tab_map []
     {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
     {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
     {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
-    {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
+    {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,100,1},
     {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2} };*/
+}
+
+void write_time_to_file()
+{
+    printf("Here will be function that writes time played to file\n");
 }
