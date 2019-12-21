@@ -1,13 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <locale.h>
+#include <wchar.h>
 
 #define MAXLOG 20 //Defined how many logins can the array of structs store
 
-
+typedef struct
+{
+    char login[30];
+    char password[20];
+    int time_played;
+}Player;
 
 void logging_in();
-void write_time_to_file();
+void creating_an_account();
+void write_time_to_file(/*int total_time*/);
 void read_time_from_file();
 void show_menu_after_logging(int checker); //Function for showing menu
 void generate_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that generates map
@@ -27,7 +35,7 @@ int main()
     int steps = 0;
     int * ptr;
     ptr = &steps;
-    int choice = 0;
+    char choice;
     int checker = 0;
     double total_time;
     //End of the declaration of variables
@@ -39,11 +47,12 @@ int main()
     do
     {
         show_menu_after_logging(checker);
-        scanf("%d",&choice);
+        scanf("%c",&choice);
         switch(choice)
         {
-            case 1:
+            case '1':
             {
+                checker = 1;
                 generate_map(tab_size_vertical, tab_size_horizontal, tab_map);
                 int num_of_stars = stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map);
                 printf("There are %d stars on the map\n", stars_in_map_counter(tab_size_vertical, tab_size_horizontal,tab_map));
@@ -59,15 +68,18 @@ int main()
                 break;   
             }
 
-            case 2:
+            case '2':
             write_time_to_file();
             break;
 
-            case 3:
+            case '3':
             printf("Thank you for playing!\n");
             exit(0);
+
+            default:
+            printf("No such option in the menu.\n");
+            break;
         }
-        checker = 1;
     }while(1);
 
     return 0;
