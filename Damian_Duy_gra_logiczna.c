@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define MAXLOG 20 //Defined how many logins can the array of structs store
+
+
+
 void logging_in();
 void write_time_to_file();
 void read_time_from_file();
@@ -10,12 +14,11 @@ void generate_map(int tab_size_vertical, int tab_size_horizontal, int tab_map []
 void show_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that prints map
 void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr); //Function for taking user input and moving the character
 int stars_in_map_counter(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that counts elements to pick on the map
-char getch(); //Function for taking input from keyboard without waiting for enter
+char getch(); //Function for taking input from keyboard without waiting for an enter
 
 int main()
 {
     //Declaration of variables
-    clock_t begin_t, end_t, total_t;
     srand(time(NULL));
     int tab_size_vertical = 20;
     int tab_size_horizontal = 20;
@@ -26,6 +29,7 @@ int main()
     ptr = &steps;
     int choice = 0;
     int checker = 0;
+    double total_time;
     //End of the declaration of variables
 
     //Logging in
@@ -43,14 +47,14 @@ int main()
                 generate_map(tab_size_vertical, tab_size_horizontal, tab_map);
                 int num_of_stars = stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map);
                 printf("There are %d stars on the map\n", stars_in_map_counter(tab_size_vertical, tab_size_horizontal,tab_map));
-                begin_t = clock();
+                time_t start = time(NULL);
                 user_input(tab_size_vertical, tab_size_horizontal, tab_map, num_of_stars, ptr);
-                end_t = clock();
+                time_t end = time(NULL);
+                total_time = difftime(end,start);
                 if(stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map) == 0)
                 {
                     printf("You got the stars in %d steps.\n", *ptr);
-                    total_t = (float)(end_t - begin_t);
-                    printf("With time %ld sec\n", total_t/10000);
+                    printf("With time %.2f sec\n", total_time);
                 }
                 break;   
             }
