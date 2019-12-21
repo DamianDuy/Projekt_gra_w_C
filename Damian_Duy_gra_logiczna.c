@@ -47,7 +47,7 @@ int main()
     do
     {
         show_menu_after_logging(checker);
-        scanf("%c",&choice);
+        choice = getch();
         switch(choice)
         {
             case '1':
@@ -69,16 +69,28 @@ int main()
             }
 
             case '2':
-            write_time_to_file();
-            break;
+            {
+                write_time_to_file();
+                break;
+            }    
 
             case '3':
-            printf("Thank you for playing!\n");
-            exit(0);
+            {
+                system("clear");
+                printf("Thank you for playing!\n");
+                printf("Bye ");
+                setlocale(LC_ALL,"en_US.UTF-8");
+                printf("👋");
+                printf("\n");
+                exit(0);
+            }    
 
             default:
-            printf("No such option in the menu.\n");
-            break;
+            {
+                system("clear");
+                printf("Choose vaild menu option.\n");
+                break;
+            }    
         }
     }while(1);
 
@@ -274,5 +286,6 @@ void generate_map(int tab_size_vertical, int tab_size_horizontal, int tab_map []
 
 void write_time_to_file()
 {
+    system("clear");
     printf("Here will be function that writes time played to file\n");
 }
