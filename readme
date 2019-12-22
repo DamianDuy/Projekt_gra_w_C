@@ -1,1 +1,5 @@
-tu będzie opis gry.
+Opis gry:
+Mały ampersand jest w niebezpieczeństwie! Czy pomożesz mu zebrać wszystkich jego przyjaciół wskaźników na pseudo losowo generowanych planszach pełnych niebezpieczeństw, w jak najlepszym czasie i jak najmniejszej liczbie kroków?
+
+Szczegółowy opis zastosowanyh konstrukcji:
+1. Mapa jest generowana za pomocą tablicy dwuwymiarowej oraz liczb psedolosowych.

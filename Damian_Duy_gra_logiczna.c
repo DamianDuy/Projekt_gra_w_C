@@ -3,6 +3,8 @@
 #include <time.h>
 #include <locale.h>
 #include <wchar.h>
+#include <unistd.h>
+#include <string.h>
 
 #define MAXLOG 20 //Defined how many logins can the array of structs store
 
@@ -10,15 +12,13 @@ typedef struct
 {
     char login[30];
     char password[20];
-    int time_played;
 }Player;
 
-void logging_in(int * ptr_num);
-void creating_an_account(int * ptr_num);
-void show_menu_to_log_in();
-void write_time_to_file(/*int total_time*/);
-void read_time_from_file();
-void show_menu_after_logging(int checker); //Function for showing menu
+void logging_in(int * ptr_num, char login_to_display[], Player players []);
+int reading_logins_from_file(char login [], char password []); //Function checks if user's login is in file and returns 0 if no, 1 if yes
+void creating_an_account(int * ptr_num, Player players []); //Function adds a position to an array of structures
+void show_menu_to_log_in(); //Function shows the menu with logging options
+void show_menu_after_logging(int checker, char login_to_display []); //Function for showing menu
 void generate_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that generates map
 void show_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that prints map
 void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr_steps); //Function for taking user input and moving the character
@@ -42,15 +42,19 @@ int main()
     double total_time;
     int num_of_login = 0;
     int * ptr_num = &num_of_login;
+    char login_to_display[30];
+    Player players[MAXLOG];
+    double time_you_play = 0;
     //End of the declaration of variables
 
     //Logging in
-    logging_in(ptr_num);
+    logging_screen:
+    logging_in(ptr_num, login_to_display, players);
 
     //Looped menu
     do
     {
-        show_menu_after_logging(checker);
+        show_menu_after_logging(checker, login_to_display);
         choice = getch();
         switch(choice)
         {
@@ -68,17 +72,30 @@ int main()
                 {
                     printf("You got the stars in %d steps.\n", *ptr_steps);
                     printf("With time %.2f sec\n", total_time);
+                    sleep(1);
                 }
+                time_you_play += total_time;
                 break;   
             }
 
             case '2':
             {
-                write_time_to_file();
+                system("clear");
+                if(time_you_play < 60)
+                printf("You've been playing for %.2f seconds.\n", time_you_play);
+                else
+                printf("You've been playing for %.2f minutes.\n", time_you_play);
                 break;
-            }    
+            } 
 
             case '3':
+            {
+                checker = 0;
+                goto logging_screen;
+                break;
+            }   
+
+            case '4':
             {
                 system("clear");
                 printf("Thank you for playing!\n");
@@ -101,22 +118,24 @@ int main()
     return 0;
 }
 
-void show_menu_after_logging(int checker)
+void show_menu_after_logging(int checker, char login_to_display[])
 {
     if(checker == 0)
     {
-        printf("Welcome login!\n");
+        printf("Welcome %s!\n", login_to_display);
         printf("1. Play.\n");
         printf("2. Show time played.\n");
-        printf("3. Exit.\n");
+        printf("3. Log out.\n");
+        printf("4. Exit.\n");
     }
 
     if(checker == 1)   
     {   
-        printf("Welcome again login!\n");
+        printf("Welcome again %s!\n", login_to_display);
         printf("1. Play again.\n");
         printf("2. Show time played.\n");
-        printf("3. Exit.\n");
+        printf("3. Log out.\n");
+        printf("4. Exit.\n");
     } 
 }
 
@@ -294,12 +313,19 @@ void write_time_to_file()
     printf("Here will be function that writes time played to file\n");
 }
 
-void creating_an_account(int * ptr_num)
+void creating_an_account(int * ptr_num, Player players[])
 {
-    if(*ptr_num > 18) printf("Too many logins in database. Can not add another one.\n");
-    else
-    {
-        Player players[MAXLOG];
+        if(*ptr_num == MAXLOG - 1)
+        {
+            printf("Sorry. Can not create another account.\n");
+            sleep(1);
+            printf("Exiting with error ");
+            setlocale(LC_ALL,"en_US.UTF-8");
+            printf("😠.");
+            printf("\n");
+            system("rm -r logins.txt");
+            exit(1);
+        }
         Player * person = &players[*ptr_num];
         printf("Login: ");
         scanf("%29s", person->login);
@@ -313,13 +339,16 @@ void creating_an_account(int * ptr_num)
         fprintf(login_file,"%s ", person->login);
         fprintf(login_file,"%s\n", person->password);
         fclose(login_file);
+             
         //Incrementing an index in array
         (*ptr_num)++;
-    }    
+        
 }
 
-void logging_in(int * ptr_num)
+void logging_in(int * ptr_num, char login_to_display [], Player players [])
 {
+    char login [30];
+    char password [20];
     char choice;
     do
     {
@@ -331,26 +360,39 @@ void logging_in(int * ptr_num)
             case '1':
           {
             system("clear");
-            creating_an_account(ptr_num);
+            creating_an_account(ptr_num, players);
             break;
           }
           
           case '2':
           {
-              printf("Logowanie");
               system("clear");
+              printf("Insert login: ");
+              scanf("%29s", login);
+              printf("Insert password: ");
+              scanf("%19s", password);
+              //Functions reading_logins_from_file return 1 if success and 0 if failure
+              if(reading_logins_from_file(login,password))
+              {
+                  printf("You've logged in succesfully!\n");
+                  strcpy(login_to_display, login);
+              }
+              else
+              {
+                  printf("Wrong login or password.\n");
+                  sleep(3);
+                  logging_in(ptr_num, login_to_display,players);
+              }
               break;
-              //Read from file
-
           }
           
           case '3':
           {
             system("clear");
-            printf("You exited without logging in.\n");
+            printf("You are exiting the game.\n");
             printf("Bye ");
             setlocale(LC_ALL,"en_US.UTF-8");
-            printf("😠");
+            printf("😢");
             printf("\n");
             system("rm -r logins.txt");
             exit(0);
@@ -367,7 +409,13 @@ void logging_in(int * ptr_num)
 
 void show_menu_to_log_in()
 {
+    system("clear");
     printf("1. Create an account.\n");
     printf("2. Log in.\n");
     printf("3. Exit.\n");
+}
+
+int reading_logins_from_file(char login [], char password [])
+{
+    return 1;
 }
