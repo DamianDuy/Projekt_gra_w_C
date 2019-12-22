@@ -13,16 +13,18 @@ typedef struct
     int time_played;
 }Player;
 
-void logging_in();
-void creating_an_account();
+void logging_in(int * ptr_num);
+void creating_an_account(int * ptr_num);
+void show_menu_to_log_in();
 void write_time_to_file(/*int total_time*/);
 void read_time_from_file();
 void show_menu_after_logging(int checker); //Function for showing menu
 void generate_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that generates map
 void show_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that prints map
-void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr); //Function for taking user input and moving the character
+void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr_steps); //Function for taking user input and moving the character
 int stars_in_map_counter(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that counts elements to pick on the map
 char getch(); //Function for taking input from keyboard without waiting for an enter
+void move_enemy();
 
 int main()
 {
@@ -33,15 +35,17 @@ int main()
     int map_size = tab_size_vertical*tab_size_horizontal;
     int tab_map[20][20];
     int steps = 0;
-    int * ptr;
-    ptr = &steps;
+    int * ptr_steps;
+    ptr_steps = &steps;
     char choice;
     int checker = 0;
     double total_time;
+    int num_of_login = 0;
+    int * ptr_num = &num_of_login;
     //End of the declaration of variables
 
     //Logging in
-    //logging_in()
+    logging_in(ptr_num);
 
     //Looped menu
     do
@@ -57,12 +61,12 @@ int main()
                 int num_of_stars = stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map);
                 printf("There are %d stars on the map\n", stars_in_map_counter(tab_size_vertical, tab_size_horizontal,tab_map));
                 time_t start = time(NULL);
-                user_input(tab_size_vertical, tab_size_horizontal, tab_map, num_of_stars, ptr);
+                user_input(tab_size_vertical, tab_size_horizontal, tab_map, num_of_stars, ptr_steps);
                 time_t end = time(NULL);
                 total_time = difftime(end,start);
                 if(stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map) == 0)
                 {
-                    printf("You got the stars in %d steps.\n", *ptr);
+                    printf("You got the stars in %d steps.\n", *ptr_steps);
                     printf("With time %.2f sec\n", total_time);
                 }
                 break;   
@@ -82,13 +86,13 @@ int main()
                 setlocale(LC_ALL,"en_US.UTF-8");
                 printf("👋");
                 printf("\n");
+                system("rm -r logins.txt");
                 exit(0);
             }    
 
             default:
             {
                 system("clear");
-                printf("Choose vaild menu option.\n");
                 break;
             }    
         }
@@ -168,7 +172,7 @@ int stars_in_map_counter(int tab_size_vertical, int tab_size_horizontal, int tab
     return count_stars;    
 }
 
-void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr)
+void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr_steps)
 {
     int coor_x = 1;
     int coor_y = 1;
@@ -225,7 +229,7 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
             }
         }
         tab_map[coor_x][coor_y] = 0;
-        (*ptr)++;
+        (*ptr_steps)++;
     }while(c != 'e' && stars_left > 0);
         system("clear");
         printf("Use w,s,a,d to move, e to exit.\n");
@@ -288,4 +292,82 @@ void write_time_to_file()
 {
     system("clear");
     printf("Here will be function that writes time played to file\n");
+}
+
+void creating_an_account(int * ptr_num)
+{
+    if(*ptr_num > 18) printf("Too many logins in database. Can not add another one.\n");
+    else
+    {
+        Player players[MAXLOG];
+        Player * person = &players[*ptr_num];
+        printf("Login: ");
+        scanf("%29s", person->login);
+        printf("Password: ");
+        scanf("%20s", person->password);
+        
+        //Writing to file
+        FILE *login_file;
+        login_file = fopen("logins.txt", "a");
+        fprintf(login_file,"%d. ",*ptr_num);
+        fprintf(login_file,"%s ", person->login);
+        fprintf(login_file,"%s\n", person->password);
+        fclose(login_file);
+        //Incrementing an index in array
+        (*ptr_num)++;
+    }    
+}
+
+void logging_in(int * ptr_num)
+{
+    char choice;
+    do
+    {
+        show_menu_to_log_in();
+        choice = getch();
+
+        switch(choice)
+        {
+            case '1':
+          {
+            system("clear");
+            creating_an_account(ptr_num);
+            break;
+          }
+          
+          case '2':
+          {
+              printf("Logowanie");
+              system("clear");
+              break;
+              //Read from file
+
+          }
+          
+          case '3':
+          {
+            system("clear");
+            printf("You exited without logging in.\n");
+            printf("Bye ");
+            setlocale(LC_ALL,"en_US.UTF-8");
+            printf("😠");
+            printf("\n");
+            system("rm -r logins.txt");
+            exit(0);
+          }    
+
+          default:
+          {
+            system("clear");
+            break;
+          }  
+        }
+    }while(choice != '2');        
+}
+
+void show_menu_to_log_in()
+{
+    printf("1. Create an account.\n");
+    printf("2. Log in.\n");
+    printf("3. Exit.\n");
 }
