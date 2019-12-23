@@ -298,20 +298,47 @@ void generate_map(int tab_size_vertical, int tab_size_horizontal, int tab_map []
 void creating_an_account()
 {
         int title_is_same = 0;
+        int break_imposter = 0;
         char temp_login [30];
+        char temp_password [20];
         char login [30];
         char password [20];
 
         //Reading from the file
-        File *check_log;
+        FILE *check_log;
         check_log = fopen("logins.txt", "r");
+        if(check_log == NULL)
+        {
+            printf("Encountered error.\n");
+            printf("File logins.txt is missing.\n");
+            exit(1);
+        }
+
         printf("Login: ");
-        scanf("%29s", temp_login);
-
-
-
-
-
+        scanf("%29s", login);
+        while(break_imposter == 0)
+        {
+            while(fscanf(check_log, "%29s %*s", temp_login) > 0 && title_is_same == 0)
+            {
+                if(strcmp(temp_login, login) == 0)
+                {
+                    title_is_same = 1;
+                }
+            }
+            if(title_is_same == 1)
+            {
+                printf("This account already exists.\n");
+                printf("Login: ");
+                scanf("%29s", login);
+            }
+            else if(title_is_same == 0) 
+            {
+                break_imposter = 1;
+            }
+            title_is_same = 0;
+            rewind(check_log);     
+        }    
+        fclose(check_log);
         printf("Password: ");
         scanf("%20s", password);
         
