@@ -18,8 +18,9 @@ void generate_map(int tab_size_vertical, int tab_size_horizontal, int tab_map []
 void show_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that prints map
 void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr_steps); //Function for taking user input and moving the character
 int stars_in_map_counter(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that counts elements to pick on the map
-char getch(); //Function for taking input from keyboard without waiting for an enter
 void move_enemy();
+char getch(); //Function for taking input from keyboard without waiting for an enter
+void clear_input();
 
 int main()
 {
@@ -321,7 +322,7 @@ void creating_an_account()
         printf(ANSI_COLOR_GREEN "Disclaimer. Login can not include spaces. The spaces in input will be ignored." ANSI_COLOR_RESET "\n");
         printf("Login: ");
         scanf("%29s", login);
-        while ((getchar()) != '\n');
+        clear_input(); //flushing the input buffer
         while(break_imposter == 0)
         {
             while(fscanf(check_log, "%29s %*s", temp_login) > 0 && title_is_same == 0)
@@ -336,7 +337,7 @@ void creating_an_account()
                 printf("This account already exists.\n");
                 printf("Login: ");
                 scanf("%29s", login);
-                while ((getchar()) != '\n');
+                clear_input(); //flushing the input buffer
                 
             }
             else if(title_is_same == 0) 
@@ -349,7 +350,7 @@ void creating_an_account()
         fclose(check_log);
         printf("Password: ");
         scanf("%20s", password);
-        while ((getchar()) != '\n');
+        clear_input(); //flushing the input buffer
         
         //Writing to file
         FILE *login_file;
@@ -383,10 +384,10 @@ void logging_in(char login_to_display [])
               system("clear");
               printf("Insert login: ");
               scanf("%29s", login);
-              while ((getchar()) != '\n'); //flushing the input buffer
+              clear_input(); //flushing the input buffer
               printf("Insert password: ");
               scanf("%19s", password);
-              while ((getchar()) != '\n');
+              clear_input(); //flushing the input buffer
               //Functions reading_logins_from_file return 1 if success and 0 if failure
               if(reading_logins_from_file(login,password))
               {
@@ -466,4 +467,9 @@ int reading_logins_from_file(char login [], char password [])
             return 0;
         }    
             
+}
+
+void clear_input()
+{
+    while ( getchar() != '\n' ); //Takes away redundant input
 }
