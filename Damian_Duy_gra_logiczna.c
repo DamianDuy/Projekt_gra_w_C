@@ -6,6 +6,9 @@
 #include <unistd.h>
 #include <string.h>
 
+#define ANSI_COLOR_GREEN "\x1b[32m"
+#define ANSI_COLOR_RESET "\x1b[0m"
+
 void logging_in(char login_to_display[]);
 int reading_logins_from_file(char login [], char password []); //Function checks if user's login is in file and returns 0 if no, 1 if yes
 void creating_an_account(); //Function adds a position to an array of structures
@@ -315,9 +318,10 @@ void creating_an_account()
             printf("Make sure file logins.txt is present before playing the game.\n");
             exit(1);
         }
-
+        printf(ANSI_COLOR_GREEN "Disclaimer. Login can not include spaces. The spaces in input will be ignored." ANSI_COLOR_RESET "\n");
         printf("Login: ");
         scanf("%29s", login);
+        while ((getchar()) != '\n');
         while(break_imposter == 0)
         {
             while(fscanf(check_log, "%29s %*s", temp_login) > 0 && title_is_same == 0)
@@ -332,6 +336,8 @@ void creating_an_account()
                 printf("This account already exists.\n");
                 printf("Login: ");
                 scanf("%29s", login);
+                while ((getchar()) != '\n');
+                
             }
             else if(title_is_same == 0) 
             {
@@ -343,6 +349,7 @@ void creating_an_account()
         fclose(check_log);
         printf("Password: ");
         scanf("%20s", password);
+        while ((getchar()) != '\n');
         
         //Writing to file
         FILE *login_file;
@@ -376,13 +383,16 @@ void logging_in(char login_to_display [])
               system("clear");
               printf("Insert login: ");
               scanf("%29s", login);
+              while ((getchar()) != '\n'); //flushing the input buffer
               printf("Insert password: ");
               scanf("%19s", password);
+              while ((getchar()) != '\n');
               //Functions reading_logins_from_file return 1 if success and 0 if failure
               if(reading_logins_from_file(login,password))
               {
                   printf("You've logged in succesfully!\n");
                   strcpy(login_to_display, login);
+                  system("clear");
               }
               else
               {
