@@ -73,13 +73,14 @@ int main()
                 if(time_you_play < 60)
                 printf("You've been playing for %.2f seconds.\n", time_you_play);
                 else
-                printf("You've been playing for %.2f minutes.\n", time_you_play);
+                printf("You've been playing for %.2f minutes.\n", time_you_play/60);
                 break;
             } 
 
             case '3':
             {
                 checker = 0;
+                time_you_play = 0;
                 goto logging_screen;
                 break;
             }   
@@ -311,6 +312,7 @@ void creating_an_account()
         {
             printf("Encountered error.\n");
             printf("File logins.txt is missing.\n");
+            printf("Make sure file logins.txt is present before playing the game.\n");
             exit(1);
         }
 
@@ -421,6 +423,37 @@ void show_menu_to_log_in()
 
 int reading_logins_from_file(char login [], char password [])
 {
-
-    return 1;
+        char from_file_login [30];
+        char from_file_password [20];
+        int log_and_pas_correct = 0;
+        FILE *logins;
+        logins = fopen("logins.txt", "r");
+        if(logins == NULL)
+        {
+            printf("Encountered error.\n");
+            printf("File logins.txt is missing.\n");
+            printf("Make sure file logins.txt is present before playing the game.\n");
+            exit(1);
+        }
+        while(fscanf(logins, "%29s %19s", from_file_login, from_file_password) > 0 && log_and_pas_correct == 0)
+        {
+            if(strcmp(from_file_login, login) == 0)
+            {
+                if(strcmp(from_file_password, password) == 0)
+                {
+                    log_and_pas_correct = 1;
+                }
+            }
+        }
+        if(log_and_pas_correct == 1)
+        {
+            fclose(logins);
+            return 1;
+        }
+        else
+        {
+            fclose(logins);
+            return 0;
+        }    
+            
 }
