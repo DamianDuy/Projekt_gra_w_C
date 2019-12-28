@@ -18,7 +18,8 @@ void generate_map(int tab_size_vertical, int tab_size_horizontal, int tab_map []
 void show_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that prints map
 void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr_steps); //Function for taking user input and moving the character
 int stars_in_map_counter(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that counts elements to pick on the map
-void move_enemy();
+void bonus();
+void surprise();
 char getch(); //Function for taking input from keyboard without waiting for an enter
 void clear_input();
 
@@ -164,6 +165,14 @@ void show_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [ta
                 printf("$");
                 break;
 
+                case 200:
+                printf("X");
+                break;
+
+                case 300:
+                printf("!");
+                break;
+
                 default: //Have to be set to proper generate stars randomly later
                 printf(" ");
                 break;
@@ -190,52 +199,129 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
     int coor_y = 1;
     int stars_left = num_of_stars;
     char c;
+    int if_have_weapon = 0;
     do
     {    
         system("clear");
-        printf("Use w,s,a,d to move, e to exit.\n");
+        printf("Use w,s,a,d or arrows to move, e to exit.\n");
         show_map(tab_size_vertical, tab_size_horizontal,tab_map);
         c = getch();
         tab_map[coor_x][coor_y] = 4;
         switch(c)
         {
+            case 68: //Left arrow
             case 'a':
             {
-                if(tab_map[coor_x][coor_y-1] != 1 && tab_map[coor_x][coor_y-1] != 2 && tab_map[coor_x][coor_y-1] != 3 && tab_map[coor_x][coor_y-1] != 100) coor_y--;
+                if(tab_map[coor_x][coor_y-1] != 1 && tab_map[coor_x][coor_y-1] != 2 && tab_map[coor_x][coor_y-1] != 3 && tab_map[coor_x][coor_y-1] != 100 && tab_map[coor_x][coor_y-1] != 200 && tab_map[coor_x][coor_y-1] != 300) coor_y--;
                 else if(tab_map[coor_x][coor_y-1] == 3)
                 {
                     stars_left--;
                     coor_y--;
                 }
+                else if(tab_map[coor_x][coor_y-1] == 100)
+                {
+                    coor_y--;
+                    bonus();
+                }
+                else if(tab_map[coor_x][coor_y-1] == 200)
+                {
+                    if(if_have_weapon == 1)
+                    {
+                        coor_y--;
+                        if_have_weapon = 0;
+                    }
+                }
+                else if(tab_map[coor_x][coor_y-1] == 300)
+                {
+                    coor_y--;
+                    if_have_weapon = 1;
+                }
                 break;
             }
+            case 67: //Right arrow
             case 'd':
             {
-                if(tab_map[coor_x][coor_y+1] != 1 && tab_map[coor_x][coor_y+1] != 2 && tab_map[coor_x][coor_y+1] != 3 && tab_map[coor_x][coor_y+1] != 100) coor_y++;
+                if(tab_map[coor_x][coor_y+1] != 1 && tab_map[coor_x][coor_y+1] != 2 && tab_map[coor_x][coor_y+1] != 3 && tab_map[coor_x][coor_y+1] != 100 && tab_map[coor_x][coor_y+1] != 200 && tab_map[coor_x][coor_y+1] != 300) coor_y++;
                 else if(tab_map[coor_x][coor_y+1] == 3)
                 {
                     stars_left--;
                     coor_y++;
                 }
+                else if(tab_map[coor_x][coor_y+1] == 100)
+                {
+                    coor_y++;
+                    bonus();
+                }
+                else if(tab_map[coor_x][coor_y+1] == 200)
+                {
+                    if(if_have_weapon == 1)
+                    {
+                        coor_y++;
+                        if_have_weapon = 0;
+                    }
+                }
+                else if(tab_map[coor_x][coor_y+1] == 300)
+                {
+                    coor_y++;
+                    if_have_weapon = 1;
+                }
                 break;
             }
+            case 65: //Up arrow
             case 'w':
             {
-                if(tab_map[coor_x-1][coor_y] != 1 && tab_map[coor_x-1][coor_y] != 2 && tab_map[coor_x-1][coor_y] != 3 && tab_map[coor_x-1][coor_y] != 100) coor_x--;
+                if(tab_map[coor_x-1][coor_y] != 1 && tab_map[coor_x-1][coor_y] != 2 && tab_map[coor_x-1][coor_y] != 3 && tab_map[coor_x-1][coor_y] != 100 && tab_map[coor_x-1][coor_y] != 200 && tab_map[coor_x-1][coor_y] != 300) coor_x--;
                 else if(tab_map[coor_x-1][coor_y] == 3)
                 {
                     stars_left--;
                     coor_x--;
                 }
+                else if(tab_map[coor_x-1][coor_y] == 100)
+                {
+                    coor_x--;
+                    bonus();
+                }
+                else if(tab_map[coor_x-1][coor_y] == 200)
+                {
+                    if(if_have_weapon == 1)
+                    {
+                        coor_x--;
+                        if_have_weapon = 0;
+                    }
+                }
+                else if(tab_map[coor_x-1][coor_y] == 300)
+                {
+                    coor_x--;
+                    if_have_weapon = 1;
+                }
                 break;
             }
+            case 66: //Down arrow
             case 's':
             {
-                if(tab_map[coor_x+1][coor_y] != 1 && tab_map[coor_x+1][coor_y] != 2 && tab_map[coor_x+1][coor_y] != 3 && tab_map[coor_x+1][coor_y] != 100) coor_x++;
+                if(tab_map[coor_x+1][coor_y] != 1 && tab_map[coor_x+1][coor_y] != 2 && tab_map[coor_x+1][coor_y] != 3 && tab_map[coor_x+1][coor_y] != 100 && tab_map[coor_x+1][coor_y] != 200 && tab_map[coor_x+1][coor_y] != 300) coor_x++;
                 else if(tab_map[coor_x+1][coor_y] == 3)
                 {
                     stars_left--;
                     coor_x++;
+                }
+                else if(tab_map[coor_x+1][coor_y] == 100)
+                {
+                    coor_x++;
+                    bonus();
+                }
+                else if(tab_map[coor_x+1][coor_y] == 200)
+                {
+                    if(if_have_weapon == 1)
+                    {
+                        coor_x++;
+                        if_have_weapon = 0;
+                    }
+                }
+                else if(tab_map[coor_x+1][coor_y] == 300)
+                {
+                    coor_x++;
+                    if_have_weapon = 1;
                 }
                 break;
             }
@@ -247,6 +333,7 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
         printf("Use w,s,a,d to move, e to exit.\n");
         show_map(tab_size_vertical, tab_size_horizontal,tab_map);    
 }
+
 
 char getch()
 {
@@ -271,33 +358,96 @@ void generate_map(int tab_size_vertical, int tab_size_horizontal, int tab_map []
     for(int i = 1; i < tab_size_vertical; i++) tab_map[i][tab_size_horizontal - 1] = 1;
     for(int j = 0; j < tab_size_horizontal; j++)tab_map[tab_size_vertical - 1][j] = 2;
 
+    //Loops for drawing more interesting map
+    for(int i = 2; i < 13; i++)
+    {
+        tab_map[i][2] = 1;
+    }
+    tab_map[10][2] = 4;
+    for(int j = 3; j < 18; j++)
+    {
+        tab_map[2][j] = 2;
+    }
+    for(int i = 3; i < 14; i++)
+    {
+        tab_map[i][10] = 1;
+    }
+    tab_map[12][3] = 2;
+    tab_map[12][4] = 2;
+    tab_map[12][5] = 2;
+    tab_map[11][5] = 1;
+    tab_map[10][5] = 1;
+    tab_map[9][5] = 1;
+    tab_map[8][5] = 1;
+
+    for(int j = 1; j < 19; j++)
+    {
+        tab_map[15][j] = 2;
+    }
+    
+    tab_map[15][10] = 200;
+
     //Generating stars randomly
     for(int i = 2; i < tab_size_vertical - 1; i++)
+    {
         for(int j = 2; j < tab_size_horizontal - 1; j++)
-            tab_map[i][j] = rand() % 20 + 3;        
+        {
+            if(tab_map[i][j] == 4)
+            {
+                tab_map[i][j] = rand() % 20 + 3;
+            }
+        }
+    }
+        
+     tab_map[3][3] = 300;   
+     tab_map[17][17] = 100;               
+}
 
-    
-    /*tab_map[20][20] = {
-    {1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
-    {1,0,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
-    {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
-    {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
-    {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
-    {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
-    {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
-    {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
-    {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
-    {1,4,4,4,4,4,4,4,4,4,4,3,4,4,4,4,4,4,4,1},
-    {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
-    {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
-    {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
-    {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
-    {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
-    {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
-    {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
-    {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1},
-    {1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,100,1},
-    {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2} };*/
+void bonus()
+{
+    system("clear");
+    int success = 0;
+    char a = rand() % 25 + 97;
+    char b = rand() % 25 + 97;
+    char c = rand() % 25 + 97;
+    char d = rand() % 25 + 97;
+    printf("%c %c %c %c\n", a, b, c, d);
+    char input_var;
+    sleep(1);
+    system("clear");
+    input_var = getchar();
+    if(input_var == a)
+    {
+        clear_input();
+        input_var = getchar();
+        if(input_var == b)
+        {
+            clear_input();
+            input_var = getchar();
+            if(input_var == c)
+            {
+                clear_input();
+                input_var = getchar();
+                if(input_var == d)
+                {
+                    success = 1;
+                    printf("Congratulations!\n");
+                    printf("You got a bonus and unlocked a surprise.\n");
+                    surprise();
+                }
+            
+            }
+        }
+    }
+    if(success == 0) printf("Sorry! You failed to get a bonus.\n");
+    clear_input();
+    sleep(2);
+}
+
+void surprise()
+{
+        printf("Hello\n");
+        sleep(2);
 }
 
 void creating_an_account()
@@ -319,7 +469,7 @@ void creating_an_account()
             printf("Make sure file logins.txt is present before playing the game.\n");
             exit(1);
         }
-        printf(ANSI_COLOR_GREEN "Disclaimer. Login can not include spaces. The spaces in input will be ignored." ANSI_COLOR_RESET "\n");
+        printf(ANSI_COLOR_GREEN "Login can not include spaces. The spaces in input will be ignored." ANSI_COLOR_RESET "\n");
         printf("Login: ");
         scanf("%29s", login);
         clear_input(); //flushing the input buffer
@@ -345,7 +495,7 @@ void creating_an_account()
                 break_imposter = 1;
             }
             title_is_same = 0;
-            rewind(check_log);     
+            rewind(check_log); //Going back to the beginning of the file     
         }    
         fclose(check_log);
         printf("Password: ");
