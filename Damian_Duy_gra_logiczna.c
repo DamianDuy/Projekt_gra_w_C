@@ -6,39 +6,41 @@
 #include <unistd.h>
 #include <string.h>
 
-#define ANSI_COLOR_GREEN "\x1b[32m"
-#define ANSI_COLOR_RESET "\x1b[0m"
+#define ANSI_COLOR_GREEN "\x1b[32m" //for making green console text using ANSI escape codes
+#define ANSI_COLOR_RESET "\x1b[0m" //reseting console colors to default
 
-void logging_in(char login_to_display[]);
+void logging_in(char login_to_display[]); //Function used for logging in
 int reading_logins_from_file(char login [], char password []); //Function checks if user's login is in file and returns 0 if no, 1 if yes
 void creating_an_account(); //Function adds a position to an array of structures
 void show_menu_to_log_in(); //Function shows the menu with logging options
 void show_menu_after_logging(int checker, char login_to_display []); //Function for showing menu
-void generate_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that generates map
+void generate_map_first(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that generates map
+void generate_map_second(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that generates map
 void show_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that prints map
 void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr_steps); //Function for taking user input and moving the character
 int stars_in_map_counter(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that counts elements to pick on the map
-void bonus();
-void surprise();
+void bonus(); //Function used for receiving bonus
+void surprise(); //Function that draws a surprise
 char getch(); //Function for taking input from keyboard without waiting for an enter
-void clear_input();
+void clear_input(); //Function that clears redundand input (for example after scanf)
 
 int main()
 {
-    //Declaration of variables
     srand(time(NULL));
+    //Declaration of variables
     int tab_size_vertical = 20;
     int tab_size_horizontal = 20;
     int map_size = tab_size_vertical*tab_size_horizontal;
     int tab_map[20][20];
-    int steps = 0;
+    int steps = 0; //For how many steps it took to complete the level
     int * ptr_steps;
     ptr_steps = &steps;
     char choice;
-    int checker = 0;
+    int checker = 0; //For checking which version of menu to show
     double total_time;
     char login_to_display[30];
     double time_you_play = 0;
+    int which_map = 0;
     //End of the declaration of variables
 
     //Logging in
@@ -48,16 +50,20 @@ int main()
     //Looped menu
     do
     {
+        which_map = rand() % 2 + 1; //Getting a number of map that will be generated
         show_menu_after_logging(checker, login_to_display);
         choice = getch();
         switch(choice)
         {
             case '1':
             {
-                checker = 1;
-                generate_map(tab_size_vertical, tab_size_horizontal, tab_map);
+                checker = 1; //Changes to one because different menu will be shown now
+                if(which_map == 1) generate_map_first(tab_size_vertical, tab_size_horizontal, tab_map);
+                else if(which_map == 2) generate_map_second(tab_size_vertical, tab_size_horizontal, tab_map);
                 int num_of_stars = stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map);
+                system("clear");
                 printf("There are %d stars on the map\n", stars_in_map_counter(tab_size_vertical, tab_size_horizontal,tab_map));
+                sleep(2);
                 time_t start = time(NULL);
                 user_input(tab_size_vertical, tab_size_horizontal, tab_map, num_of_stars, ptr_steps);
                 time_t end = time(NULL);
@@ -84,9 +90,9 @@ int main()
 
             case '3':
             {
-                checker = 0;
-                time_you_play = 0;
-                goto logging_screen;
+                checker = 0; //Restarting which menu to show after user logs off
+                time_you_play = 0; //Restarting time user has been playing for after user logs off
+                goto logging_screen; //using goto to go back to loggin_in function
                 break;
             }   
 
@@ -107,7 +113,7 @@ int main()
                 break;
             }    
         }
-    }while(1);
+    }while(1); //Infinite loop. Program ends with exits when user choose "Exit"
 
     return 0;
 }
@@ -135,6 +141,7 @@ void show_menu_after_logging(int checker, char login_to_display[])
 
 void show_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal])
 {
+    //Array is filled with numbers, this function uses printf to print symbols 
     for(int i = 0; i < tab_size_vertical; i++)
     {
         for(int j = 0; j < tab_size_horizontal; j++)
@@ -225,16 +232,16 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
                 }
                 else if(tab_map[coor_x][coor_y-1] == 200)
                 {
-                    if(if_have_weapon == 1)
+                    if(if_have_weapon > 0)
                     {
                         coor_y--;
-                        if_have_weapon = 0;
+                        if_have_weapon--;
                     }
                 }
                 else if(tab_map[coor_x][coor_y-1] == 300)
                 {
                     coor_y--;
-                    if_have_weapon = 1;
+                    if_have_weapon++;
                 }
                 break;
             }
@@ -254,16 +261,16 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
                 }
                 else if(tab_map[coor_x][coor_y+1] == 200)
                 {
-                    if(if_have_weapon == 1)
+                    if(if_have_weapon > 0)
                     {
                         coor_y++;
-                        if_have_weapon = 0;
+                        if_have_weapon--;
                     }
                 }
                 else if(tab_map[coor_x][coor_y+1] == 300)
                 {
                     coor_y++;
-                    if_have_weapon = 1;
+                    if_have_weapon++;
                 }
                 break;
             }
@@ -283,16 +290,16 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
                 }
                 else if(tab_map[coor_x-1][coor_y] == 200)
                 {
-                    if(if_have_weapon == 1)
+                    if(if_have_weapon > 0)
                     {
                         coor_x--;
-                        if_have_weapon = 0;
+                        if_have_weapon--;
                     }
                 }
                 else if(tab_map[coor_x-1][coor_y] == 300)
                 {
                     coor_x--;
-                    if_have_weapon = 1;
+                    if_have_weapon++;
                 }
                 break;
             }
@@ -312,16 +319,16 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
                 }
                 else if(tab_map[coor_x+1][coor_y] == 200)
                 {
-                    if(if_have_weapon == 1)
+                    if(if_have_weapon > 0)
                     {
                         coor_x++;
-                        if_have_weapon = 0;
+                        if_have_weapon--;
                     }
                 }
                 else if(tab_map[coor_x+1][coor_y] == 300)
                 {
                     coor_x++;
-                    if_have_weapon = 1;
+                    if_have_weapon++;
                 }
                 break;
             }
@@ -335,15 +342,15 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
 }
 
 
-char getch()
+char getch() //implementation of getch() function from conio.h or ncurses libraries
 {
-    system ("/bin/stty raw");  
+    system ("/bin/stty raw");  //stty sets options for terminal, here used to enable raw input
     char ret = getchar();
-    system ("/bin/stty cooked");
+    system ("/bin/stty cooked"); //disables raw input
     return ret;
 }
 
-void generate_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal])
+void generate_map_first(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal])
 {
     //Filling an array with 4 where 4 represents ' '
     for(int i = 0; i < tab_size_vertical; i++)
@@ -385,7 +392,7 @@ void generate_map(int tab_size_vertical, int tab_size_horizontal, int tab_map []
         tab_map[15][j] = 2;
     }
     
-    tab_map[15][10] = 200;
+    tab_map[15][10] = 200; //Setting "X" on map
 
     //Generating stars randomly
     for(int i = 2; i < tab_size_vertical - 1; i++)
@@ -399,8 +406,73 @@ void generate_map(int tab_size_vertical, int tab_size_horizontal, int tab_map []
         }
     }
         
-     tab_map[3][3] = 300;   
-     tab_map[17][17] = 100;               
+     tab_map[3][3] = 300;   //Setting "!" on map
+     tab_map[17][17] = 100; //Setting "$" on map              
+}
+
+void generate_map_second(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal])
+{
+    //Filling an array with 4 where 4 represents ' '
+    for(int i = 0; i < tab_size_vertical; i++)
+        for(int j = 0; j < tab_size_horizontal; j++)
+        tab_map[i][j] = 4;
+
+    tab_map[1][1] = 0;    
+    
+    //Loops for drawing the edges of the map
+    for(int i = 0; i < tab_size_vertical; i++) tab_map[i][0] = 1;
+    for(int j = 0; j < tab_size_horizontal; j++)tab_map[0][j] = 2;
+    for(int i = 1; i < tab_size_vertical; i++) tab_map[i][tab_size_horizontal - 1] = 1;
+    for(int j = 0; j < tab_size_horizontal; j++)tab_map[tab_size_vertical - 1][j] = 2;
+
+    //Generating stars randomly
+    for(int i = 2; i < tab_size_vertical - 1; i++)
+    {
+        for(int j = 2; j < tab_size_horizontal - 1; j++)
+        {
+            if(tab_map[i][j] == 4)
+            {
+                tab_map[i][j] = rand() % 20 + 3;
+            }
+        }
+    }
+
+    for(int j = 2; j < 18; j++)
+    {
+        tab_map[2][j] = 2;
+    }
+
+    tab_map[2][1] = 200;
+    tab_map[3][17] = 1;
+    tab_map[4][17] = 1;
+    tab_map[5][16] = 2;
+    tab_map[5][15] = 2;
+    tab_map[5][14] = 2;
+    tab_map[6][14] = 1;
+    tab_map[7][14] = 200;
+    tab_map[8][15] = 300;
+    tab_map[8][14] = 1;
+    tab_map[9][14] = 1;
+    for(int j = 15; j < 19; j++)
+    {
+        tab_map[9][j] = 2;
+    }
+    tab_map[3][2] = 1;
+    tab_map[4][2] = 1;
+    tab_map[5][3] = 2;
+    tab_map[5][4] = 2;
+    tab_map[5][5] = 2;
+    tab_map[6][5] = 1;
+    tab_map[7][5] = 200;
+    tab_map[8][5] = 1;
+    tab_map[9][5] = 1;
+    for(int j = 1; j < 5; j++)
+    {
+        tab_map[9][j] = 2;
+    }
+    tab_map[8][4] = 300;
+    tab_map[8][3] = 3;
+    tab_map[10][10] = 100;
 }
 
 void bonus()
