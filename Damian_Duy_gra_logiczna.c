@@ -62,7 +62,7 @@ int main()
                 else if(which_map == 2) generate_map_second(tab_size_vertical, tab_size_horizontal, tab_map);
                 int num_of_stars = stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map);
                 system("clear");
-                printf("There are %d stars on the map\n", stars_in_map_counter(tab_size_vertical, tab_size_horizontal,tab_map));
+                printf("There are %d stars on the map.\n", stars_in_map_counter(tab_size_vertical, tab_size_horizontal,tab_map));
                 sleep(2);
                 time_t start = time(NULL);
                 user_input(tab_size_vertical, tab_size_horizontal, tab_map, num_of_stars, ptr_steps);
