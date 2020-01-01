@@ -16,6 +16,7 @@ void show_menu_to_log_in(); //Function shows the menu with logging options
 void show_menu_after_logging(int checker, char login_to_display []); //Function for showing menu
 void generate_map_first(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that generates map
 void generate_map_second(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that generates map
+void generate_map_third(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that generates map
 void show_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that prints map
 void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr_steps); //Function for taking user input and moving the character
 int stars_in_map_counter(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that counts elements to pick on the map
@@ -50,7 +51,7 @@ int main()
     //Looped menu
     do
     {
-        which_map = rand() % 2 + 1; //Getting a number of map that will be generated
+        which_map = rand() % 3 + 1; //Getting a number of map that will be generated
         show_menu_after_logging(checker, login_to_display);
         choice = getch();
         switch(choice)
@@ -60,6 +61,7 @@ int main()
                 checker = 1; //Changes to one because different menu will be shown now
                 if(which_map == 1) generate_map_first(tab_size_vertical, tab_size_horizontal, tab_map);
                 else if(which_map == 2) generate_map_second(tab_size_vertical, tab_size_horizontal, tab_map);
+                else if(which_map == 3) generate_map_third(tab_size_vertical, tab_size_horizontal, tab_map);
                 int num_of_stars = stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map);
                 system("clear");
                 printf("There are %d stars on the map.\n", stars_in_map_counter(tab_size_vertical, tab_size_horizontal,tab_map));
@@ -473,6 +475,50 @@ void generate_map_second(int tab_size_vertical, int tab_size_horizontal, int tab
     tab_map[8][4] = 300;
     tab_map[8][3] = 3;
     tab_map[10][10] = 100;
+}
+
+void generate_map_third(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal])
+{
+    //Filling an array with 4 where 4 represents ' '
+    for(int i = 0; i < tab_size_vertical; i++)
+        for(int j = 0; j < tab_size_horizontal; j++)
+        tab_map[i][j] = 4;
+
+    tab_map[1][1] = 0;    
+    
+    //Loops for drawing the edges of the map
+    for(int i = 0; i < tab_size_vertical; i++) tab_map[i][0] = 1;
+    for(int j = 0; j < tab_size_horizontal; j++)tab_map[0][j] = 2;
+    for(int i = 1; i < tab_size_vertical; i++) tab_map[i][tab_size_horizontal - 1] = 1;
+    for(int j = 0; j < tab_size_horizontal; j++)tab_map[tab_size_vertical - 1][j] = 2;
+
+    //Generating stars randomly
+    for(int i = 2; i < tab_size_vertical - 1; i++)
+    {
+        for(int j = 2; j < tab_size_horizontal - 1; j++)
+        {
+            if(tab_map[i][j] == 4)
+            {
+                tab_map[i][j] = rand() % 20 + 3;
+            }
+        }
+    }
+
+    for(int i = 1; i < 19; i++)
+    {
+        tab_map[i][9] = 1;
+    }
+    for(int j = 1; j < 19; j++)
+    {
+        tab_map[9][j] = 2;
+    }
+    tab_map[5][9] = 200;
+    tab_map[14][9] = 200;
+    tab_map[9][5] = 200;
+    tab_map[9][14] = 200;
+    tab_map[5][5] = 300;
+    tab_map[6][6] = 300;
+    tab_map[10][18] = 300;
 }
 
 void bonus()
