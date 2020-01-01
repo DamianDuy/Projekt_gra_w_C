@@ -1,5 +1,32 @@
 Opis gry:
-Mały ampersand jest w niebezpieczeństwie! Czy pomożesz mu zebrać wszystkich jego przyjaciół wskaźników na pseudo losowo generowanych planszach pełnych niebezpieczeństw, w jak najlepszym czasie i jak najmniejszej liczbie kroków?
+  Mały ampersand jest w niebezpieczeństwie! Czy pomożesz mu zebrać jego przyjaciół wskaźniki, znajdujących się na różnych
+planszach i dokonać tego w jak najkrótszym czasie i jak najmniejszej liczbie kroków?
 
-Szczegółowy opis zastosowanyh konstrukcji:
-1. Mapa jest generowana za pomocą tablicy dwuwymiarowej oraz liczb psedolosowych.
+Szczegółowy opis rozgrywki:
+  Kierując ampersandem ("&") zbieramy wszystkie wskaźniki ("*") generowane losowo na 3 dostępnych mapach. Poruszamy się za pomocą
+"w,s,a,d" lub za pomocą strzałek. Symbole "|" i "-" oznaczają ściany, prze które nie możemy przejść. Symbol "X" oznacza ścianę,
+którą możemy rozwalić jeśli posiadamy przy sobie broń "!". Po każdym rozwaleniu ściany broń się zużywa. Gracz może nosić przy
+sobie wiele broni jednocześnie.
+Gra zawiera także mechanizm logowania. Przed rozpoczęciem rozgrywki należy się zalogować. w przypadku braku konta należy je st-
+worzyć podając login i hasło.
+Program liczy także czas, który poświęciliśmy na grę w danej sesji.
+Jeśli utknęliśmy lub chcemy na nowo wylosować mapę należy nacisnąć przycisk "e".
+
+Opis techniczny programu:
+  Do generowanie mapy została użyta tablica dwuwymiarowa oraz liczby pseudolosowe. Poruszanie się po mapie polega na      
+pobieraniu ruchu gracza za pomocą zaimplementowanej funkcji getch(), a następnie zamianie wartości w tablicy dwuwymiarowej.
+Następnie ekran jest czyszczony, a tablica z nowymi wartościami jest wyświetlana za pomocą funkcji show_map().
+Do liczenia czasu jaki zajęła użytkownikowi gra użyto zmiennych typu time_t, do których przypisywana jest wartość time(NULL)
+oraz funkcji difftime(), która liczy różnice czasu między nimi.
+Przy implementacji logowania użyto zapisu i odczytu z pliku. Sprawdzanie czy dane logowania są poprawne również odbywa się
+poprze otwarcie pliku, a następnie porówanianie danych wprowadzonych prze użytkownika z danymi znajdującymi się w pliku.
+W programie znajduję się również mechanizm zapobiegający stworzeniu dwóch różnych kont z tym samym loginem.
+Do wyświetlania i obsługi menu użyto funkcji wyświetlających, pętli, instrukcji warunkowej if oraz instrukcji switch case.
+Do obsługi wylogowywania się została użyta instrukcja goto.
+  
+  
+
+UWAGA DALSZY TEKST ZAWIERA OPIS NIESPODZIANKI W GRZE, WIĘC ZALECANE JEST POMINIĘCIE GO PRZED ZAGRANIEM!
+  Symbol "$" oznacza bonus. Po jego zebraniu trzeba przejść prostą minigrę. Na ekranie wyświetlają się losowo generowane litery.
+Po krótkiej chwili znikają one. Wtedy należy wpisać je po enterze na ekran. Bonusem jest niespodzianka ukryta w programie, któ-
+rą jest prosta animacja.
