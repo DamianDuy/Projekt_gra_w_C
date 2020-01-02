@@ -564,8 +564,44 @@ void bonus()
 
 void surprise()
 {
-        printf("Hello\n");
-        sleep(2);
+    //Goes to the bottom of the console
+    for (int i = 0; i < 30; i++)
+    {
+        printf("\n");
+    }
+    system("clear");
+    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    printf("            /\\\n");
+    printf("           /  \\\n");
+    printf("          /____\\\n");
+    printf("          |    |\n");
+    printf("          |    |\n");
+    printf("          |@@@@|\n");
+    printf("          |    |\n");
+    printf("          |    |\n");
+    printf("          |____|\n");
+    printf("             *\n");
+    printf("              *\n");
+    printf("              <*>\n");
+    for (int j = 0; j < 15; j++)
+    {
+        //Delaying the movement
+        for(unsigned i = 0; i < 100000000; i++)
+        {
+
+        }
+        //Moves the drawing upward since the cursor is at the end of the console
+        printf("\n");
+    }
+    for(unsigned i = 0; i < 100; i++)
+        {
+            printf("          \\   /\n");
+            printf("           \\ /\n");
+            printf("            *\n");
+            printf("           / \\\n");
+            printf("          /   \\\n");
+            system("clear");
+        }        
 }
 
 void creating_an_account()
