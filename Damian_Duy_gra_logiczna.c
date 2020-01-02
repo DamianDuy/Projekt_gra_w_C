@@ -18,7 +18,7 @@ void generate_map_first(int tab_size_vertical, int tab_size_horizontal, int tab_
 void generate_map_second(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that generates map
 void generate_map_third(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that generates map
 void show_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that prints map
-void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr_steps); //Function for taking user input and moving the character
+void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr_steps, int * ptr_if_the_same_map); //Function for taking user input and moving the character
 int stars_in_map_counter(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]); //Function that counts elements to pick on the map
 void bonus(); //Function used for receiving bonus
 void surprise(); //Function that draws a surprise
@@ -34,7 +34,7 @@ int main()
     int map_size = tab_size_vertical*tab_size_horizontal;
     int tab_map[20][20];
     int steps = 0; //For how many steps it took to complete the level
-    int * ptr_steps;
+    int * ptr_steps; //Creating pointer to the variable steps so it can be changed in the user_input function
     ptr_steps = &steps;
     char choice;
     int checker = 0; //For checking which version of menu to show
@@ -42,6 +42,10 @@ int main()
     char login_to_display[30];
     double time_you_play = 0;
     int which_map = 0;
+    int temp_which_map = 0; //Variable for temporary holding the which_map variable value
+    int if_the_same_map = 0; //Variable for checking if player wants to restart the game
+    int * ptr_if_the_same_map; //Creating the pointer to the variable if_the_same_map so it can be changed in the user_input function
+    ptr_if_the_same_map = &if_the_same_map;
     //End of the declaration of variables
 
     //Logging in
@@ -52,6 +56,12 @@ int main()
     do
     {
         which_map = rand() % 3 + 1; //Getting a number of map that will be generated
+        if(*ptr_if_the_same_map != 0) 
+        {
+            which_map = temp_which_map; 
+            *ptr_if_the_same_map = 0; //Setting the flag to 0 again because else user would be playing on the same map over and over again
+        }    
+        temp_which_map = which_map; //This value will hold the which map value and will be used if the player wants to play on the same map again
         show_menu_after_logging(checker, login_to_display);
         choice = getch();
         switch(choice)
@@ -67,7 +77,7 @@ int main()
                 printf("There are %d stars on the map.\n", stars_in_map_counter(tab_size_vertical, tab_size_horizontal,tab_map));
                 sleep(2);
                 time_t start = time(NULL);
-                user_input(tab_size_vertical, tab_size_horizontal, tab_map, num_of_stars, ptr_steps);
+                user_input(tab_size_vertical, tab_size_horizontal, tab_map, num_of_stars, ptr_steps, ptr_if_the_same_map);
                 time_t end = time(NULL);
                 total_time = difftime(end,start);
                 if(stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map) == 0)
@@ -202,7 +212,7 @@ int stars_in_map_counter(int tab_size_vertical, int tab_size_horizontal, int tab
     return count_stars;    
 }
 
-void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr_steps)
+void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr_steps, int * ptr_if_the_same_map)
 {
     int coor_x = 1;
     int coor_y = 1;
@@ -212,7 +222,7 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
     do
     {    
         system("clear");
-        printf("Use w,s,a,d or arrows to move, e to exit.\n");
+        printf("Use w,s,a,d to move, r to restart (after restarting the next game is on the same map), e to exit.\n");
         show_map(tab_size_vertical, tab_size_horizontal,tab_map);
         c = getch();
         tab_map[coor_x][coor_y] = 4;
@@ -337,10 +347,11 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
         }
         tab_map[coor_x][coor_y] = 0;
         (*ptr_steps)++;
-    }while(c != 'e' && stars_left > 0);
+    }while(c != 'e' && c != 'r' && stars_left > 0);
         system("clear");
-        printf("Use w,s,a,d to move, e to exit.\n");
-        show_map(tab_size_vertical, tab_size_horizontal,tab_map);    
+        printf("Use w,s,a,d to move, r to restart (after restarting the next game is on the same map), e to exit.\n");
+        show_map(tab_size_vertical, tab_size_horizontal,tab_map);
+        if(c == 'r') *ptr_if_the_same_map = 1; //If user wants to play on the same map next time the value of if_the_same map changes to 1 and is used in the main function as a flag    
 }
 
 
