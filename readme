@@ -3,7 +3,7 @@ Opis gry:
 planszach i dokonać tego w jak najkrótszym czasie i jak najmniejszej liczbie kroków?
 
 Szczegółowy opis rozgrywki:
-  Kierując ampersandem ("&") zbieramy wszystkie wskaźniki ("*") generowane losowo na 5 dostępnych mapach. Poruszamy się za pomocą
+  Kierując ampersandem ("&") zbieramy wszystkie wskaźniki ("*") generowane losowo na 6 dostępnych mapach. Poruszamy się za pomocą
 "w,s,a,d" lub za pomocą strzałek. Symbole "|" i "-" oznaczają ściany, prze które nie możemy przejść. Symbol "X" oznacza ścianę,
 którą możemy rozwalić jeśli posiadamy przy sobie broń "!". Po każdym rozwaleniu ściany broń się zużywa. Gracz może nosić przy
 sobie wiele broni jednocześnie.
