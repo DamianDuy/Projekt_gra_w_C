@@ -5,9 +5,18 @@
 #include <wchar.h>
 #include <unistd.h>
 #include <string.h>
+#include "function_headers.h"
 
 #define ANSI_COLOR_GREEN "\x1b[32m" //for making green console text using ANSI escape codes
 #define ANSI_COLOR_RESET "\x1b[0m" //reseting console colors to default
+
+typedef struct
+{
+    int coor_x;
+    int coor_y;
+
+}Coordinates;
+
 
 void logging_in(char login_to_display[]); //Function used for logging in
 int reading_logins_from_file(char login [], char password []); //Function checks if user's login is in file and returns 0 if no, 1 if yes
@@ -28,6 +37,7 @@ void bonus(); //Function used for receiving bonus
 void surprise(); //Function that draws a surprise
 char getch(); //Function for taking input from keyboard without waiting for an enter
 void clear_input(); //Function that clears redundand input (for example after scanf)
+void ending_game(); //Function shows message and ends the game
 
 int main()
 {
@@ -118,13 +128,7 @@ int main()
 
             case '4':
             {
-                system("clear");
-                printf("Thank you for playing!\n");
-                printf("Bye ");
-                setlocale(LC_ALL,"en_US.UTF-8");
-                printf("👋");
-                printf("\n");
-                exit(0);
+                ending_game();
             }    
 
             default:
@@ -157,6 +161,17 @@ void show_menu_after_logging(int checker, char login_to_display[])
         printf("3. Log out.\n");
         printf("4. Exit.\n");
     } 
+}
+
+void ending_game()
+{
+    system("clear");
+    printf("Thank you for playing!\n");
+    printf("Bye ");
+    setlocale(LC_ALL,"en_US.UTF-8");
+    printf("👋");
+    printf("\n");
+    exit(0);
 }
 
 void show_map(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal])
@@ -222,8 +237,9 @@ int stars_in_map_counter(int tab_size_vertical, int tab_size_horizontal, int tab
 
 void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr_steps, int * ptr_if_the_same_map)
 {
-    int coor_x = 1;
-    int coor_y = 1;
+    Coordinates coordinate;
+    coordinate.coor_x = 1;
+    coordinate.coor_y = 1;
     int stars_left = num_of_stars;
     char c;
     int if_have_weapon = 0;
@@ -233,34 +249,34 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
         printf("Use w,s,a,d to move, r to restart (after restarting the next game is on the same map), e to exit.\n");
         show_map(tab_size_vertical, tab_size_horizontal,tab_map);
         c = getch();
-        tab_map[coor_x][coor_y] = 4;
+        tab_map[coordinate.coor_x][coordinate.coor_y] = 4;
         switch(c)
         {
             case 68: //Left arrow
             case 'a':
             {
-                if(tab_map[coor_x][coor_y-1] != 1 && tab_map[coor_x][coor_y-1] != 2 && tab_map[coor_x][coor_y-1] != 3 && tab_map[coor_x][coor_y-1] != 100 && tab_map[coor_x][coor_y-1] != 200 && tab_map[coor_x][coor_y-1] != 300) coor_y--;
-                else if(tab_map[coor_x][coor_y-1] == 3)
+                if(tab_map[coordinate.coor_x][coordinate.coor_y-1] != 1 && tab_map[coordinate.coor_x][coordinate.coor_y-1] != 2 && tab_map[coordinate.coor_x][coordinate.coor_y-1] != 3 && tab_map[coordinate.coor_x][coordinate.coor_y-1] != 100 && tab_map[coordinate.coor_x][coordinate.coor_y-1] != 200 && tab_map[coordinate.coor_x][coordinate.coor_y-1] != 300) coordinate.coor_y--;
+                else if(tab_map[coordinate.coor_x][coordinate.coor_y-1] == 3)
                 {
                     stars_left--;
-                    coor_y--;
+                    coordinate.coor_y--;
                 }
-                else if(tab_map[coor_x][coor_y-1] == 100)
+                else if(tab_map[coordinate.coor_x][coordinate.coor_y-1] == 100)
                 {
-                    coor_y--;
+                    coordinate.coor_y--;
                     bonus();
                 }
-                else if(tab_map[coor_x][coor_y-1] == 200)
+                else if(tab_map[coordinate.coor_x][coordinate.coor_y-1] == 200)
                 {
                     if(if_have_weapon > 0)
                     {
-                        coor_y--;
+                        coordinate.coor_y--;
                         if_have_weapon--;
                     }
                 }
-                else if(tab_map[coor_x][coor_y-1] == 300)
+                else if(tab_map[coordinate.coor_x][coordinate.coor_y-1] == 300)
                 {
-                    coor_y--;
+                    coordinate.coor_y--;
                     if_have_weapon++;
                 }
                 break;
@@ -268,28 +284,28 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
             case 67: //Right arrow
             case 'd':
             {
-                if(tab_map[coor_x][coor_y+1] != 1 && tab_map[coor_x][coor_y+1] != 2 && tab_map[coor_x][coor_y+1] != 3 && tab_map[coor_x][coor_y+1] != 100 && tab_map[coor_x][coor_y+1] != 200 && tab_map[coor_x][coor_y+1] != 300) coor_y++;
-                else if(tab_map[coor_x][coor_y+1] == 3)
+                if(tab_map[coordinate.coor_x][coordinate.coor_y+1] != 1 && tab_map[coordinate.coor_x][coordinate.coor_y+1] != 2 && tab_map[coordinate.coor_x][coordinate.coor_y+1] != 3 && tab_map[coordinate.coor_x][coordinate.coor_y+1] != 100 && tab_map[coordinate.coor_x][coordinate.coor_y+1] != 200 && tab_map[coordinate.coor_x][coordinate.coor_y+1] != 300) coordinate.coor_y++;
+                else if(tab_map[coordinate.coor_x][coordinate.coor_y+1] == 3)
                 {
                     stars_left--;
-                    coor_y++;
+                    coordinate.coor_y++;
                 }
-                else if(tab_map[coor_x][coor_y+1] == 100)
+                else if(tab_map[coordinate.coor_x][coordinate.coor_y+1] == 100)
                 {
-                    coor_y++;
+                    coordinate.coor_y++;
                     bonus();
                 }
-                else if(tab_map[coor_x][coor_y+1] == 200)
+                else if(tab_map[coordinate.coor_x][coordinate.coor_y+1] == 200)
                 {
                     if(if_have_weapon > 0)
                     {
-                        coor_y++;
+                        coordinate.coor_y++;
                         if_have_weapon--;
                     }
                 }
-                else if(tab_map[coor_x][coor_y+1] == 300)
+                else if(tab_map[coordinate.coor_x][coordinate.coor_y+1] == 300)
                 {
-                    coor_y++;
+                    coordinate.coor_y++;
                     if_have_weapon++;
                 }
                 break;
@@ -297,28 +313,28 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
             case 65: //Up arrow
             case 'w':
             {
-                if(tab_map[coor_x-1][coor_y] != 1 && tab_map[coor_x-1][coor_y] != 2 && tab_map[coor_x-1][coor_y] != 3 && tab_map[coor_x-1][coor_y] != 100 && tab_map[coor_x-1][coor_y] != 200 && tab_map[coor_x-1][coor_y] != 300) coor_x--;
-                else if(tab_map[coor_x-1][coor_y] == 3)
+                if(tab_map[coordinate.coor_x-1][coordinate.coor_y] != 1 && tab_map[coordinate.coor_x-1][coordinate.coor_y] != 2 && tab_map[coordinate.coor_x-1][coordinate.coor_y] != 3 && tab_map[coordinate.coor_x-1][coordinate.coor_y] != 100 && tab_map[coordinate.coor_x-1][coordinate.coor_y] != 200 && tab_map[coordinate.coor_x-1][coordinate.coor_y] != 300) coordinate.coor_x--;
+                else if(tab_map[coordinate.coor_x-1][coordinate.coor_y] == 3)
                 {
                     stars_left--;
-                    coor_x--;
+                    coordinate.coor_x--;
                 }
-                else if(tab_map[coor_x-1][coor_y] == 100)
+                else if(tab_map[coordinate.coor_x-1][coordinate.coor_y] == 100)
                 {
-                    coor_x--;
+                    coordinate.coor_x--;
                     bonus();
                 }
-                else if(tab_map[coor_x-1][coor_y] == 200)
+                else if(tab_map[coordinate.coor_x-1][coordinate.coor_y] == 200)
                 {
                     if(if_have_weapon > 0)
                     {
-                        coor_x--;
+                        coordinate.coor_x--;
                         if_have_weapon--;
                     }
                 }
-                else if(tab_map[coor_x-1][coor_y] == 300)
+                else if(tab_map[coordinate.coor_x-1][coordinate.coor_y] == 300)
                 {
-                    coor_x--;
+                    coordinate.coor_x--;
                     if_have_weapon++;
                 }
                 break;
@@ -326,34 +342,34 @@ void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [
             case 66: //Down arrow
             case 's':
             {
-                if(tab_map[coor_x+1][coor_y] != 1 && tab_map[coor_x+1][coor_y] != 2 && tab_map[coor_x+1][coor_y] != 3 && tab_map[coor_x+1][coor_y] != 100 && tab_map[coor_x+1][coor_y] != 200 && tab_map[coor_x+1][coor_y] != 300) coor_x++;
-                else if(tab_map[coor_x+1][coor_y] == 3)
+                if(tab_map[coordinate.coor_x+1][coordinate.coor_y] != 1 && tab_map[coordinate.coor_x+1][coordinate.coor_y] != 2 && tab_map[coordinate.coor_x+1][coordinate.coor_y] != 3 && tab_map[coordinate.coor_x+1][coordinate.coor_y] != 100 && tab_map[coordinate.coor_x+1][coordinate.coor_y] != 200 && tab_map[coordinate.coor_x+1][coordinate.coor_y] != 300) coordinate.coor_x++;
+                else if(tab_map[coordinate.coor_x+1][coordinate.coor_y] == 3)
                 {
                     stars_left--;
-                    coor_x++;
+                    coordinate.coor_x++;
                 }
-                else if(tab_map[coor_x+1][coor_y] == 100)
+                else if(tab_map[coordinate.coor_x+1][coordinate.coor_y] == 100)
                 {
-                    coor_x++;
+                    coordinate.coor_x++;
                     bonus();
                 }
-                else if(tab_map[coor_x+1][coor_y] == 200)
+                else if(tab_map[coordinate.coor_x+1][coordinate.coor_y] == 200)
                 {
                     if(if_have_weapon > 0)
                     {
-                        coor_x++;
+                        coordinate.coor_x++;
                         if_have_weapon--;
                     }
                 }
-                else if(tab_map[coor_x+1][coor_y] == 300)
+                else if(tab_map[coordinate.coor_x+1][coordinate.coor_y] == 300)
                 {
-                    coor_x++;
+                    coordinate.coor_x++;
                     if_have_weapon++;
                 }
                 break;
             }
         }
-        tab_map[coor_x][coor_y] = 0;
+        tab_map[coordinate.coor_x][coordinate.coor_y] = 0;
         (*ptr_steps)++;
     }while(c != 'e' && c != 'r' && stars_left > 0);
         system("clear");
