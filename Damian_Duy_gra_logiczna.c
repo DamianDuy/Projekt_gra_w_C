@@ -34,7 +34,11 @@ int main()
     char login_to_display[30];
     double time_you_play = 0;
     int which_map = 0;
+    int * ptr_which_map;
+    ptr_which_map = &which_map;
     int temp_which_map = 0; //Variable for temporary holding the which_map variable value
+    int * ptr_temp_which_map;
+    ptr_temp_which_map = &temp_which_map;
     int if_the_same_map = 0; //Variable for checking if player wants to restart the game
     int * ptr_if_the_same_map; //Creating the pointer to the variable if_the_same_map so it can be changed in the user_input function
     ptr_if_the_same_map = &if_the_same_map;
@@ -47,13 +51,7 @@ int main()
     //Looped menu
     do
     {
-        which_map = rand() % 7 + 1; //Getting a number of map that will be generated
-        if(*ptr_if_the_same_map != 0) 
-        {
-            which_map = temp_which_map; 
-            *ptr_if_the_same_map = 0; //Setting the flag to 0 again because else user would be playing on the same map over and over again
-        }    
-        temp_which_map = which_map; //This value will hold the which map value and will be used if the player wants to play on the same map again
+        getting_random_map_number(ptr_which_map, ptr_if_the_same_map, ptr_temp_which_map);
         show_menu_after_logging(checker, login_to_display);
         choice = getch();
         switch(choice)

@@ -21,5 +21,6 @@ void surprise(); //Function that draws a surprise
 char getch(); //Function for taking input from keyboard without waiting for an enter
 void clear_input(); //Function that clears redundand input (for example after scanf)
 void ending_game(); //Function shows message and ends the game
+void getting_random_map_number(int * ptr_which_map, int *ptr_if_the_same_map, int * ptr_temp_which_map);
 
 #endif

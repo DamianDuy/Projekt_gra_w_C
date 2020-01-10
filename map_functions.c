@@ -79,6 +79,18 @@ int stars_in_map_counter(int tab_size_vertical, int tab_size_horizontal, int tab
     return count_stars;    
 }
 
+void getting_random_map_number(int * ptr_which_map, int * ptr_if_the_same_map, int * ptr_temp_which_map)
+{
+        *ptr_which_map = rand() % 7 + 1; //Getting a number of map that will be generated
+        if(*ptr_if_the_same_map != 0) 
+        {
+            *ptr_which_map = *ptr_temp_which_map; 
+            *ptr_if_the_same_map = 0; //Setting the flag to 0 again because else user would be playing on the same map over and over again
+        }    
+        *ptr_temp_which_map = *ptr_which_map; //This value will hold the which map value and will be used if the player wants to play on the same map again
+}
+
+//Here starts functions that manually generate maps
 void generate_map_first(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal])
 {
     //Filling an array with 4 where 4 represents ' '
