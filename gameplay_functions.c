@@ -18,6 +18,24 @@ typedef struct
 
 }Coordinates;
 
+void gameplay(double * ptr_total_time, int * ptr_steps, int * ptr_if_the_same_map, int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal])
+{
+                int num_of_stars = stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map);
+                system("clear");
+                printf("There are %d stars on the map.\n", stars_in_map_counter(tab_size_vertical, tab_size_horizontal,tab_map));
+                sleep(2);
+                time_t start = time(NULL);
+                user_input(tab_size_vertical, tab_size_horizontal, tab_map, num_of_stars, ptr_steps, ptr_if_the_same_map);
+                time_t end = time(NULL);
+                *ptr_total_time = difftime(end,start);
+                if(stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map) == 0)
+                {
+                    printf("You got the stars in %d steps.\n", *ptr_steps);
+                    printf("With time %.2f sec\n", *ptr_total_time);
+                    sleep(1);
+                }
+}
+
 void user_input(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal], int num_of_stars, int * ptr_steps, int * ptr_if_the_same_map)
 {
     Coordinates coordinate;

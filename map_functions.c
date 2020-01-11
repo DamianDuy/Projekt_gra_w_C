@@ -90,6 +90,17 @@ void getting_random_map_number(int * ptr_which_map, int * ptr_if_the_same_map, i
         *ptr_temp_which_map = *ptr_which_map; //This value will hold the which map value and will be used if the player wants to play on the same map again
 }
 
+void generating_drawn_map(int * ptr_which_map, int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal])
+{
+        if(*ptr_which_map == 1) generate_map_first(tab_size_vertical, tab_size_horizontal, tab_map);
+        else if(*ptr_which_map == 2) generate_map_second(tab_size_vertical, tab_size_horizontal, tab_map);
+        else if(*ptr_which_map == 3) generate_map_third(tab_size_vertical, tab_size_horizontal, tab_map);
+        else if(*ptr_which_map == 4) generate_map_fourth(tab_size_vertical, tab_size_horizontal, tab_map);
+        else if(*ptr_which_map == 5) generate_map_fifth(tab_size_vertical, tab_size_horizontal, tab_map);
+        else if(*ptr_which_map == 6) generate_map_sixth(tab_size_vertical, tab_size_horizontal, tab_map);
+        else if(*ptr_which_map == 7) generate_map_seventh(tab_size_vertical, tab_size_horizontal, tab_map);
+}
+
 //Here starts functions that manually generate maps
 void generate_map_first(int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal])
 {

@@ -31,8 +31,12 @@ int main()
     char choice;
     int checker = 0; //For checking which version of menu to show
     double total_time;
+    double * ptr_total_time;
+    ptr_total_time = &total_time;
     char login_to_display[30];
     double time_you_play = 0;
+    double * ptr_time_you_play;
+    ptr_time_you_play  = &time_you_play;
     int which_map = 0;
     int * ptr_which_map;
     ptr_which_map = &which_map;
@@ -59,38 +63,15 @@ int main()
             case '1':
             {
                 checker = 1; //Changes to one because different menu will be shown now
-                if(which_map == 1) generate_map_first(tab_size_vertical, tab_size_horizontal, tab_map);
-                else if(which_map == 2) generate_map_second(tab_size_vertical, tab_size_horizontal, tab_map);
-                else if(which_map == 3) generate_map_third(tab_size_vertical, tab_size_horizontal, tab_map);
-                else if(which_map == 4) generate_map_fourth(tab_size_vertical, tab_size_horizontal, tab_map);
-                else if(which_map == 5) generate_map_fifth(tab_size_vertical, tab_size_horizontal, tab_map);
-                else if(which_map == 6) generate_map_sixth(tab_size_vertical, tab_size_horizontal, tab_map);
-                else if(which_map == 7) generate_map_seventh(tab_size_vertical, tab_size_horizontal, tab_map);
-                int num_of_stars = stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map);
-                system("clear");
-                printf("There are %d stars on the map.\n", stars_in_map_counter(tab_size_vertical, tab_size_horizontal,tab_map));
-                sleep(2);
-                time_t start = time(NULL);
-                user_input(tab_size_vertical, tab_size_horizontal, tab_map, num_of_stars, ptr_steps, ptr_if_the_same_map);
-                time_t end = time(NULL);
-                total_time = difftime(end,start);
-                if(stars_in_map_counter(tab_size_vertical, tab_size_horizontal, tab_map) == 0)
-                {
-                    printf("You got the stars in %d steps.\n", *ptr_steps);
-                    printf("With time %.2f sec\n", total_time);
-                    sleep(1);
-                }
+                generating_drawn_map(ptr_which_map, tab_size_vertical, tab_size_horizontal, tab_map);
+                gameplay(ptr_total_time, ptr_steps, ptr_if_the_same_map, tab_size_vertical, tab_size_horizontal, tab_map);
                 time_you_play += total_time;
                 break;   
             }
 
             case '2':
             {
-                system("clear");
-                if(time_you_play < 60)
-                printf("You've been playing for %.2f seconds.\n", time_you_play);
-                else
-                printf("You've been playing for %.2f minutes.\n", time_you_play/60);
+                show_time_played(ptr_time_you_play);
                 break;
             } 
 

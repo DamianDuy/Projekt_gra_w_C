@@ -22,5 +22,8 @@ char getch(); //Function for taking input from keyboard without waiting for an e
 void clear_input(); //Function that clears redundand input (for example after scanf)
 void ending_game(); //Function shows message and ends the game
 void getting_random_map_number(int * ptr_which_map, int *ptr_if_the_same_map, int * ptr_temp_which_map);
+void generating_drawn_map(int * ptr_which_map, int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]);
+void gameplay(double * ptr_total_time, int * ptr_steps, int *ptr_if_the_same_map, int tab_size_vertical, int tab_size_horizontal, int tab_map [] [tab_size_horizontal]);
+void show_time_played (double * ptr_time_you_play);
 
 #endif

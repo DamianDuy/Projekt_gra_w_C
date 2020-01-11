@@ -49,3 +49,11 @@ void ending_game()
     printf("\n");
     exit(0);
 }
+
+void show_time_played (double * ptr_time_you_play)
+{
+        system("clear");
+        if(*ptr_time_you_play < 60)
+        printf("You've been playing for %.2f seconds.\n", *ptr_time_you_play);
+        else printf("You've been playing for %.2f minutes.\n", *ptr_time_you_play/60);
+}
