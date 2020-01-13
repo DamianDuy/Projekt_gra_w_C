@@ -1,3 +1,6 @@
+Informacja:
+  Do kompilacji należy użyć polecenia gcc Damian_Duy_gra_logiczna.c gameplay_functions.c logging_functions.c map_functions.c menu_functions.c other_functions.c -o Damian_Duy_gra_logiczna.o
+
 Opis gry:
   Mały ampersand jest w niebezpieczeństwie! Czy pomożesz mu zebrać jego przyjaciół wskaźniki, znajdujących się na różnych
 planszach i dokonać tego w jak najkrótszym czasie i jak najmniejszej liczbie kroków?
